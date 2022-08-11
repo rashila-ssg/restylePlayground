@@ -13,6 +13,7 @@ import {
   composeRestyleFunctions,
   border,
   color,
+  useTheme,
 } from '@shopify/restyle';
 import React, {ComponentProps} from 'react';
 import {ActivityIndicator, Pressable, PressableProps} from 'react-native';
@@ -40,7 +41,7 @@ type Props = RestyleProps &
 
 const Button = ({onPress, label, loading, disabled, ...rest}: Props) => {
   const {variant} = rest;
-
+  const theme = useTheme<Theme>();
   // @ts-ignore
   const props = useRestyle(restyleFunctions, {
     ...rest,
@@ -48,12 +49,10 @@ const Button = ({onPress, label, loading, disabled, ...rest}: Props) => {
 
   const getTextVariant: any = () => {
     switch (variant) {
+      case 'outline':
+        return 'buttonLabelBorder';
       case 'disabled':
-        return 'buttonLabelBorder';
-      case 'primary':
-        return 'primary';
-      case 'secondary':
-        return 'buttonLabelBorder';
+        return 'buttonLabel';
       default:
         return 'buttonLabel';
     }
@@ -61,9 +60,9 @@ const Button = ({onPress, label, loading, disabled, ...rest}: Props) => {
   return (
     <Pressable onPress={onPress} disabled={disabled || loading} {...props}>
       {loading ? (
-        <ActivityIndicator size="small" color={'white'} />
+        <ActivityIndicator size="small" color={theme.colors.text} />
       ) : (
-        <Text>{label}</Text>
+        <Text variant={getTextVariant()}>{label}</Text>
       )}
     </Pressable>
   );
