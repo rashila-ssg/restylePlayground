@@ -7,6 +7,7 @@ import {Alert, SafeAreaView} from 'react-native';
 import Box from './src/components/Box';
 import Button from './src/components/Button';
 import Card from './src/components/Card';
+import TextInput from './src/components/TextInput';
 import Text from './src/components/Text';
 
 import {theme, darkTheme} from './src/Theme';
@@ -24,6 +25,17 @@ const App = () => {
           justifyContent={'space-between'}>
           <Card variant={'elevated'} mt={'s'} padding={'m'}>
             <Text variant={'title'}>Some content inside the card</Text>
+            {/* Text Input Example */}
+            <TextInput
+              leftIcon="account"
+              backgroundColor={'error'}
+              placeholder="Enter your number"
+              keyboardType="number-pad"
+              boxProps={{
+                bg: 'success',
+              }}
+            />
+            {/* Button Example */}
             <Button
               label="Press me"
               onPress={() => Alert.alert('Pressed')}

@@ -1,4 +1,6 @@
-import {createTheme} from '@shopify/restyle';
+import {useTheme, createTheme} from '@shopify/restyle';
+import {useMemo} from 'react';
+import {ImageStyle, StyleSheet, TextStyle, ViewStyle} from 'react-native';
 
 export const palette = {
   primary: '#1AC0C6',
@@ -40,10 +42,16 @@ export const theme = createTheme({
     transparent: palette.transparent,
     dark: palette.black,
     cardBackround: palette.offWhite,
+    inputBackground: palette.white,
   },
   breakpoints: {
     phone: 0,
     tablet: 768,
+  },
+  borderRadius: {
+    s: 4,
+    m: 8,
+    l: 16,
   },
   textVariants: {
     defaults: {
@@ -111,9 +119,27 @@ export const darkTheme: Theme = {
     primary: palette.primaryD,
     secondary: palette.secondary,
     text: palette.white,
-    lightText: palette.grayL,
     error: palette.redL,
     success: palette.greenL,
     cardBackround: palette.grayD,
+    inputBackground: palette.darkBackground,
   },
 };
+
+type NamedStyles<T> = {[P in keyof T]: ViewStyle | TextStyle | ImageStyle};
+type StyleCreatorCallback<T, Props> = (theme: Theme, props?: Props) => T;
+
+// Util function for adding custom styles
+export function makeStyles<T extends NamedStyles<T>, Props>(
+  styleCreator: StyleCreatorCallback<T, Props>,
+) {
+  const useStyles = (props?: Props): T => {
+    const theme = useTheme<Theme>();
+
+    return useMemo(
+      () => StyleSheet.create(styleCreator(theme, props)),
+      [theme, props],
+    );
+  };
+  return useStyles;
+}
